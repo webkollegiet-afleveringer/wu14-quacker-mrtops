@@ -3,7 +3,7 @@ import Header from "../components/Header";
 export default function Trends() {
     return (
         <>
-            <Header profile search="inline" />
+            <Header profile search="center" settings />
         </>
     )
 }
