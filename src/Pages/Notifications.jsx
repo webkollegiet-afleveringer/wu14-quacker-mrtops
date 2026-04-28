@@ -1,8 +1,9 @@
+import Header from "../components/Header";
+
 export default function Notifications() {
     return (
-        <div className="notifications">
-        <h1>Notifications</h1>
-        <p>This is the notifications page.</p>
-        </div>
+        <>
+            <Header profile title="Notifications" tabs={['All', 'Mentions']} />
+        </>
     );
 }
