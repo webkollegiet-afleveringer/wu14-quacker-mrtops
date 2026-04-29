@@ -5,6 +5,7 @@ import { FaChevronLeft, FaXmark, FaGear } from 'react-icons/fa6';
 import { BsTwitter } from 'react-icons/bs';
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 import SearchTool from './Search';
+import { useAuth } from '../context/AuthContext';
 
 const Header = ({
   title,
@@ -21,6 +22,7 @@ const Header = ({
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const { user } = useAuth();
 
   const handleBack = () => {
     if (onBack) onBack();
@@ -41,7 +43,7 @@ const Header = ({
             )}
             <button onClick={() => setProfileMenuOpen(true)} className="rounded-full hover:bg-accent/10 p-1 -ml-1">
               <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold text-sm">
-                U
+                {user?.username?.charAt(0).toUpperCase() || 'U'}
               </div>
             </button>
           </div>

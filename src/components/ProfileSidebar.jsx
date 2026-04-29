@@ -5,8 +5,11 @@ import { FiMoreHorizontal } from 'react-icons/fi';
 import { HiOutlineBookmark } from 'react-icons/hi2';
 import { PiLightningLight } from 'react-icons/pi';
 import { RiFileList2Line } from 'react-icons/ri';
+import { useAuth } from '../context/AuthContext';
 
 export default function ProfileSidebar({ isOpen, onClose }) {
+  const { user } = useAuth();
+  
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : 'unset';
     return () => { document.body.style.overflow = 'unset'; };
@@ -37,25 +40,29 @@ export default function ProfileSidebar({ isOpen, onClose }) {
       }`}>
         <div className="p-4 pt-6">
           <div className="flex justify-between items-start mb-3">
-            <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xl">P</span>
+            <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-xl">{user?.username?.charAt(0).toUpperCase() || 'U'}</span>
             </div>
             <div className="flex items-center gap-2">
                 <div className="relative">
-                    <img src="https://via.placeholder.com/32" className="w-8 h-8 rounded-full border border-white" alt="user1" />
-                    <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center border-2 border-white">1</span>
+                    <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold text-sm">
+                      {user?.username?.charAt(0).toUpperCase() || 'U'}
+                    </div>
+                    <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center border-2 border-white">1</span>
                 </div>
-                <img src="https://via.placeholder.com/32" className="w-8 h-8 rounded-full grayscale" alt="user2" />
-                <button className="text-blue-500 ml-1"><FiMoreHorizontal size={24}/></button>
+                <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-sm grayscale">
+                  U
+                </div>
+                <button className="text-accent ml-1"><FiMoreHorizontal size={24}/></button>
             </div>
           </div>
 
-          <h2 className="text-lg font-bold text-gray-900 leading-tight">Pixsellz</h2>
-          <p className="text-gray-500 text-sm">@pixsellz</p>
+          <h2 className="text-lg font-bold text-text leading-tight">{user?.username || 'User'}</h2>
+          <p className="text-text-secondary text-sm">@{user?.username || 'user'}</p>
 
           <div className="flex gap-4 mt-4 text-sm">
-            <p><span className="font-bold text-gray-900">216</span> <span className="text-gray-500">Following</span></p>
-            <p><span className="font-bold text-gray-900">117</span> <span className="text-gray-500">Followers</span></p>
+            <p><span className="font-bold text-text">{user?.following || 0}</span> <span className="text-text-secondary">Following</span></p>
+            <p><span className="font-bold text-text">{user?.followers || 0}</span> <span className="text-text-secondary">Followers</span></p>
           </div>
         </div>
 
