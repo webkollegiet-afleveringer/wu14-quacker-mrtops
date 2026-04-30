@@ -1,12 +1,51 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import Header from "../components/Header";
+import PostCard from "../components/PostCard";
 
 export default function Home() {
-    return (
-        <>
-            <Header showLogo profile />
-            <div className="p-4">
-               
-            </div>  
-        </>
-    )
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/posts/")
+      .then(res => res.json())
+      .then(data => {
+        setPosts(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  return (
+    <>
+      <Header showLogo profile />
+      
+      <div>
+        {loading ? (
+          <div className="p-8 text-center text-text-secondary">Loading...</div>
+        ) : posts.length === 0 ? (
+          <div className="p-8 text-center text-text-secondary">
+            No posts yet. Be the first to post!
+          </div>
+        ) : (
+          posts.map(post => (
+            <PostCard key={post.id} post={post} />
+          ))
+        )}
+      </div>
+
+      {/* Floating Action Button */}
+      <button
+        onClick={() => navigate("/create-post")}
+        className="fixed bottom-24 right-4 w-14 h-14 bg-accent text-white rounded-full shadow-lg flex items-center justify-center hover:opacity-90 transition-opacity z-40"
+      >
+        <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5.9498 21.1814C7.91634 7.78363 18.4604 0.091897 23.8745 1.34746e-05C23.9298 -0.000923677 23.9721 0.047157 23.9718 0.102385C23.9362 6.50739 20.5774 6.81721 18.8107 6.98018C18.4024 7.01783 18.0792 7.04765 17.9016 7.14301C16.7051 7.42454 15.8781 8.24017 15.5262 8.65623C15.3676 8.84379 16.7391 9.06439 19.1457 8.85373C19.2335 8.84604 19.287 8.94821 19.2307 9.01609C17.238 11.4211 15.0191 11.9063 13.6282 12.2105C13.1759 12.3094 12.8111 12.3892 12.5702 12.5097C10.9172 14.1289 8.12366 17.8592 6.13345 21.2484C6.07798 21.3428 5.93389 21.2898 5.9498 21.1814Z" fill="white"/>
+          <path d="M5 0.755528C5.41421 0.755528 5.75 1.09131 5.75 1.50553V5.00553H9.25C9.66421 5.00553 10 5.34131 10 5.75553C10 6.16974 9.66421 6.50553 9.25 6.50553H5.75V10.0055C5.75 10.4197 5.41421 10.7555 5 10.7555C4.58579 10.7555 4.25 10.4197 4.25 10.0055V6.50553H0.75C0.335786 6.50553 0 6.16974 0 5.75553C0 5.34131 0.335786 5.00553 0.75 5.00553H4.25V1.50553C4.25 1.09131 4.58579 0.755528 5 0.755528Z" fill="white"/>
+        </svg>
+      </button>
+    </>
+  );
 }

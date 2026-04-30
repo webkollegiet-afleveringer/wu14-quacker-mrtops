@@ -5,10 +5,14 @@ import { FiMoreHorizontal } from 'react-icons/fi';
 import { HiOutlineBookmark } from 'react-icons/hi2';
 import { PiLightningLight } from 'react-icons/pi';
 import { RiFileList2Line } from 'react-icons/ri';
+import { FiLogOut } from 'react-icons/fi';
+import { NavLink } from 'react-router';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router';
 
 export default function ProfileSidebar({ isOpen, onClose }) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : 'unset';
@@ -16,12 +20,11 @@ export default function ProfileSidebar({ isOpen, onClose }) {
   }, [isOpen]);
 
   const navItems = [
-    { icon: <FaRegUser />, label: 'Profile' },
-    { icon: <RiFileList2Line />, label: 'Lists' },
-    { icon: <BiMessageRoundedDetail />, label: 'Topics' },
-    { icon: <HiOutlineBookmark />, label: 'Bookmarks' },
-    { icon: <PiLightningLight />, label: 'Moments' },
-
+    { icon: <FaRegUser />, label: 'Profile', path: '/profile' },
+    { icon: <RiFileList2Line />, label: 'Lists', path: '/lists' },
+    { icon: <BiMessageRoundedDetail />, label: 'Topics', path: '/topics' },
+    { icon: <HiOutlineBookmark />, label: 'Bookmarks', path: '/bookmarks' },
+    { icon: <PiLightningLight />, label: 'Moments', path: '/moments' },
   ]
 
   return (
@@ -66,24 +69,55 @@ export default function ProfileSidebar({ isOpen, onClose }) {
           </div>
         </div>
 
-
-        {/* Navigation link */}
+        {/* Navigation links */}
         <nav className='my-4 flex-1'>
           {navItems.map((item) =>(
-            <button key={item.label} className="w-full flex items-center gap-4 px-4 py-3 hover:bg-gray-50 transition-colors text-gray-700">
-              <span className="text-gray-500">{item.icon}</span>
+            <NavLink 
+              key={item.label} 
+              to={item.path}
+              className={({ isActive }) => 
+                `w-full flex items-center gap-4 px-4 py-3 hover:bg-gray-50 transition-colors ${
+                  isActive ? 'text-accent' : 'text-gray-700'
+                }`
+              }
+            >
+              <span className={({ isActive }) => isActive ? 'text-accent' : 'text-gray-500'}>
+                {item.icon}
+              </span>
               <span className="text-base font-medium">{item.label}</span>
-            </button>
+            </NavLink>
           ))}
           <hr className="my-4 border-primary-line" />
 
-          <button className="w-full text-left px-4 py-3 text-gray-900 font-medium hover:bg-gray-50">
+          <NavLink 
+            to="/settings"
+            className={({ isActive }) => 
+              `w-full text-left block px-4 py-3 font-medium hover:bg-gray-50 ${
+                isActive ? 'text-accent' : 'text-gray-900'
+              }`
+            }
+          >
             Settings and privacy
-          </button>
+          </NavLink>
           <button className="w-full text-left px-4 py-3 text-gray-900 font-medium hover:bg-gray-50">
             Help Center
           </button>
         </nav>
+
+        {/* Logout button at bottom */}
+        <div className="p-4 border-t border-primary-line mt-auto">
+          <button 
+            onClick={() => {
+              logout();
+              onClose();
+              navigate('/login');
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 text-text hover:bg-bg-hover rounded-lg transition-colors"
+          >
+            <FiLogOut size={20} />
+            <span className="font-medium">Log out</span>
+          </button>
+        </div>
       </div>
     </>
   );

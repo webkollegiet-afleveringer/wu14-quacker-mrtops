@@ -1,21 +1,23 @@
 const express = require("express");
 const Post = require("../models/Post");
 const User = require("../models/User");
-const auth = require("../middleware/auth");
 const router = express.Router();
 
 // Create post
-router.post("/", auth, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const { content } = req.body;
+    const { content, authorId } = req.body;
 
     if (!content) {
       return res.status(400).json({ error: "Post content is required" });
     }
 
-    const post = new Post({ author: req.userId, content });
-    await post.save();
+    if (!authorId) {
+      return res.status(401).json({ error: "Author ID required" });
+    }
 
+    const post = new Post({ author: authorId, content });
+    await post.save();
     await post.populate("author", "username");
 
     res.status(201).json({
@@ -25,12 +27,13 @@ router.post("/", auth, async (req, res) => {
       createdAt: post.createdAt,
     });
   } catch (error) {
+    console.error("Create post error:", error);
     res.status(500).json({ error: "Failed to create post" });
   }
 });
 
 // Get all posts
-router.get("/", auth, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const posts = await Post.find()
       .populate("author", "username")
@@ -44,6 +47,7 @@ router.get("/", auth, async (req, res) => {
       }))
     );
   } catch (error) {
+    console.error("Get posts error:", error);
     res.status(500).json({ error: "Failed to fetch posts" });
   }
 });

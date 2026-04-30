@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import ProfileSidebar from './ProfileSidebar';
 import { FaChevronLeft, FaXmark, FaGear } from 'react-icons/fa6';
-import { BsTwitter } from 'react-icons/bs';
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 import SearchTool from './Search';
 import { useAuth } from '../context/AuthContext';
+
+import Logo from '../assets/svg/logo.svg?react';
 
 const Header = ({
   title,
@@ -50,7 +51,7 @@ const Header = ({
 
           {/* Center Slot */}
           <div className="flex flex-col items-center text-center">
-            {showLogo && <BsTwitter className="text-accent text-2xl" />}
+            {showLogo && <Logo className="text-accent text-2xl" />}
             {title && (
               <h1 className="font-bold text-lg leading-tight truncate max-w-50">
                 {title}
